@@ -65,8 +65,9 @@ serve(async (req) => {
   }
 
   try {
-    const { messages } = await req.json();
+    const { messages, profile } = await req.json();
     console.log("Received messages:", JSON.stringify(messages));
+    console.log("Received profile:", JSON.stringify(profile));
     
     const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
     console.log("GEMINI_API_KEY exists:", !!GEMINI_API_KEY);
@@ -75,16 +76,50 @@ serve(async (req) => {
       throw new Error("GEMINI_API_KEY is not configured");
     }
 
-    // Build Gemini messages with system prompt
+    // Build personalized system prompt with user profile
+    let personalizedPrompt = SYSTEM_PROMPT;
+    
+    if (profile) {
+      const profileInfo = `
+
+## USER PROFILE CONTEXT
+The following is the user's health profile. Use this information to provide personalized, empathetic, and accurate health guidance:
+
+- Name: ${profile.full_name || 'User'}
+- Age: ${profile.age || 'Not specified'}
+- Gender: ${profile.gender || 'Not specified'}
+- Height: ${profile.height_cm ? profile.height_cm + ' cm' : 'Not specified'}
+- Weight: ${profile.weight_kg ? profile.weight_kg + ' kg' : 'Not specified'}
+- BMI: ${profile.bmi || 'Not calculated'}
+- Blood Group: ${profile.blood_group || 'Not specified'}
+- Chronic Conditions: ${profile.conditions?.length ? profile.conditions.join(', ') : 'None reported'}
+- Current Medications: ${profile.medications || 'None reported'}
+- Allergies: ${profile.allergies || 'None reported'}
+- Smoking Status: ${profile.smoker || 'Not specified'}
+- Alcohol Consumption: ${profile.drinker || 'Not specified'}
+- Activity Level: ${profile.activity_level || 'Not specified'}
+- Primary Health Goal: ${profile.health_goal || 'General wellness'}
+
+Important: Always consider the user's profile when providing advice. For example:
+- If they have chronic conditions, consider those in your recommendations
+- If they take medications, warn about potential interactions with home remedies
+- If they have allergies, avoid suggesting those allergens
+- Consider their age, gender, and activity level for appropriate guidance
+- Address them by name occasionally to build rapport
+`;
+      personalizedPrompt = SYSTEM_PROMPT + profileInfo;
+    }
+
+    // Build Gemini messages with personalized system prompt
     const userMessage = messages.find((m: any) => m.role === 'user')?.content || '';
     const geminiMessages = [
       {
         role: 'user',
-        parts: [{ text: SYSTEM_PROMPT + '\n\nUser: ' + userMessage }]
+        parts: [{ text: personalizedPrompt + '\n\nUser: ' + userMessage }]
       },
       {
         role: 'model',
-        parts: [{ text: 'I understand. I will help as SymptomSense.' }]
+        parts: [{ text: 'I understand. I will help as Health Sathi, your personal health companion.' }]
       },
       {
         role: 'user',

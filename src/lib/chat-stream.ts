@@ -2,13 +2,32 @@ const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/symptom-chat
 
 export type Msg = { role: 'user' | 'assistant'; content: string };
 
+export interface ProfileContext {
+  full_name: string | null;
+  age: number | null;
+  gender: string | null;
+  height_cm: number | null;
+  weight_kg: number | null;
+  bmi: number | null;
+  blood_group: string | null;
+  conditions: string[] | null;
+  medications: string | null;
+  allergies: string | null;
+  smoker: string | null;
+  drinker: string | null;
+  activity_level: string | null;
+  health_goal: string | null;
+}
+
 export async function streamChat({
   messages,
+  profile,
   onDelta,
   onDone,
   onError,
 }: {
   messages: Msg[];
+  profile?: ProfileContext;
   onDelta: (text: string) => void;
   onDone: () => void;
   onError: (msg: string) => void;
@@ -19,7 +38,7 @@ export async function streamChat({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
     },
-    body: JSON.stringify({ messages }),
+    body: JSON.stringify({ messages, profile }),
   });
 
   if (resp.status === 429) {
