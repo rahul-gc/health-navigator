@@ -72,28 +72,130 @@ export type Database = {
       }
       profiles: {
         Row: {
+          activity_level: string | null
+          age: number | null
+          allergies: string | null
+          avatar_url: string | null
+          blood_group: string | null
+          bmi: number | null
+          conditions: string[] | null
           created_at: string
           display_name: string | null
+          dob: string | null
+          drinker: string | null
+          full_name: string | null
+          gender: string | null
+          health_goal: string | null
+          height_cm: number | null
           id: string
+          medications: string | null
+          onboarding_complete: boolean | null
+          onboarding_step: number | null
           preferred_language: string
+          reminder_freq: string | null
+          smoker: string | null
           updated_at: string
           user_id: string
+          weight_kg: number | null
         }
         Insert: {
+          activity_level?: string | null
+          age?: number | null
+          allergies?: string | null
+          avatar_url?: string | null
+          blood_group?: string | null
+          bmi?: number | null
+          conditions?: string[] | null
           created_at?: string
           display_name?: string | null
+          dob?: string | null
+          drinker?: string | null
+          full_name?: string | null
+          gender?: string | null
+          health_goal?: string | null
+          height_cm?: number | null
           id?: string
+          medications?: string | null
+          onboarding_complete?: boolean | null
+          onboarding_step?: number | null
           preferred_language?: string
+          reminder_freq?: string | null
+          smoker?: string | null
           updated_at?: string
           user_id: string
+          weight_kg?: number | null
         }
         Update: {
+          activity_level?: string | null
+          age?: number | null
+          allergies?: string | null
+          avatar_url?: string | null
+          blood_group?: string | null
+          bmi?: number | null
+          conditions?: string[] | null
           created_at?: string
           display_name?: string | null
+          dob?: string | null
+          drinker?: string | null
+          full_name?: string | null
+          gender?: string | null
+          health_goal?: string | null
+          height_cm?: number | null
           id?: string
+          medications?: string | null
+          onboarding_complete?: boolean | null
+          onboarding_step?: number | null
           preferred_language?: string
+          reminder_freq?: string | null
+          smoker?: string | null
           updated_at?: string
           user_id?: string
+          weight_kg?: number | null
+        }
+        Relationships: []
+      }
+      vitals_log: {
+        Row: {
+          blood_sugar: number | null
+          bp_diastolic: number | null
+          bp_systolic: number | null
+          created_at: string
+          heart_rate: number | null
+          id: string
+          log_date: string
+          notes: string | null
+          sleep_hours: number | null
+          updated_at: string
+          user_id: string
+          weight_kg: number | null
+        }
+        Insert: {
+          blood_sugar?: number | null
+          bp_diastolic?: number | null
+          bp_systolic?: number | null
+          created_at?: string
+          heart_rate?: number | null
+          id?: string
+          log_date?: string
+          notes?: string | null
+          sleep_hours?: number | null
+          updated_at?: string
+          user_id: string
+          weight_kg?: number | null
+        }
+        Update: {
+          blood_sugar?: number | null
+          bp_diastolic?: number | null
+          bp_systolic?: number | null
+          created_at?: string
+          heart_rate?: number | null
+          id?: string
+          log_date?: string
+          notes?: string | null
+          sleep_hours?: number | null
+          updated_at?: string
+          user_id?: string
+          weight_kg?: number | null
         }
         Relationships: []
       }
