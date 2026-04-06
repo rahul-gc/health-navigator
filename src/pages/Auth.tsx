@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useLanguage } from '@/contexts/LanguageContext';
 import { t } from '@/lib/i18n';
 import { toast } from 'sonner';
-import { Heart } from 'lucide-react';
+import { Heart, Chrome } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 export default function Auth() {
@@ -16,6 +16,16 @@ export default function Auth() {
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const signInWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin,
+      },
+    });
+    if (error) toast.error(error.message);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,6 +93,24 @@ export default function Auth() {
             />
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? '...' : isLogin ? t(language, 'login') : t(language, 'signup')}
+            </Button>
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <span className="relative flex justify-center text-xs text-muted-foreground bg-background px-2">
+                or
+              </span>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full flex items-center gap-2"
+              onClick={signInWithGoogle}
+              disabled={loading}
+            >
+              <Chrome className="h-4 w-4" />
+              Continue with Google
             </Button>
           </form>
           <div className="mt-4 text-center text-sm text-muted-foreground">
