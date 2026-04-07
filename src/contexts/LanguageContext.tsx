@@ -15,13 +15,13 @@ export const useLanguage = () => useContext(LanguageContext);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<Language>(() => {
-    const stored = localStorage.getItem('symptomsense-lang');
+    const stored = localStorage.getItem('health-guide-lang');
     return (stored as Language) || 'en';
   });
 
   const handleSetLanguage = (lang: Language) => {
     setLanguage(lang);
-    localStorage.setItem('symptomsense-lang', lang);
+    localStorage.setItem('health-guide-lang', lang);
   };
 
   return (

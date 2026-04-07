@@ -2,17 +2,20 @@ import { NavLink } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Activity, 
-  MessageSquare, 
+  MessageCircle, 
   User, 
   Settings,
-  Heart
+  Heart,
+  Sparkles,
+  Target,
+  Shield
 } from 'lucide-react';
 
 export default function Sidebar() {
   const navItems = [
     { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { to: '/vitals', icon: Activity, label: 'Vitals' },
-    { to: '/chat', icon: MessageSquare, label: 'Ask Health Sathi' },
+    { to: '/chat', icon: MessageCircle, label: 'Ask Health Sathi' },
     { to: '/profile', icon: User, label: 'Profile' },
     { to: '/settings', icon: Settings, label: 'Settings' },
   ];
@@ -21,12 +24,12 @@ export default function Sidebar() {
     <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 z-40">
       <div className="p-6">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-green-100 rounded-xl">
-            <Heart className="h-6 w-6 text-green-600" />
+          <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
+            <Heart className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h1 className="font-bold text-xl text-gray-900">Health Sathi</h1>
-            <p className="text-xs text-green-600">Your Health Companion</p>
+            <h1 className="font-bold text-xl text-gray-900">स्वास्थ्य सहायक</h1>
+            <p className="text-xs text-blue-600 font-medium">Your Health Companion</p>
           </div>
         </div>
       </div>

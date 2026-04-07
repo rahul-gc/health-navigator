@@ -18,7 +18,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }: Dashb
       <div className="flex-1 ml-64">
         <Header profile={profile || { full_name: 'User' }} title={title} />
         
-        <main className="p-6">
+        <main className="p-6 min-h-[calc(100vh-100px)]">
           {children}
         </main>
       </div>

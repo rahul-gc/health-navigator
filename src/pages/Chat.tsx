@@ -9,7 +9,7 @@ import { ChatSidebar } from '@/components/ChatSidebar';
 import { ChatMessage } from '@/components/ChatMessage';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Send, Heart, Loader2, Trash2 } from 'lucide-react';
+import { Send, Heart, Loader2, Trash2, Sparkles, MessageCircle, Bot, User } from 'lucide-react';
 import { toast } from 'sonner';
 import { SidebarProvider } from '@/components/ui/sidebar';
 
@@ -20,7 +20,22 @@ export default function Chat() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
+  const [conversations, setConversations] = useState<{id: string, title: string}[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Load conversations on mount
+  useEffect(() => {
+    loadConversationsList();
+  }, [user]);
+
+  const loadConversationsList = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from('conversations')
+      .select('id, title')
+      .order('updated_at', { ascending: false });
+    if (data) setConversations(data);
+  };
 
   const scrollToBottom = () => {
     if (scrollRef.current) {
@@ -160,57 +175,141 @@ export default function Chat() {
 
   return (
     <DashboardLayout title="Chat with Health Sathi">
-      <div className="flex h-[calc(100vh-180px)] min-h-[400px] gap-4">
-        {/* Chat Sidebar - Conversation History */}
-        <SidebarProvider>
-          <div className="w-64 shrink-0 bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
-            <ChatSidebar
-              activeConversationId={conversationId}
-              onSelectConversation={loadConversation}
-              onNewChat={handleNewChat}
-            />
+      <div className="flex h-[600px] gap-4">
+        {/* Left Sidebar - ChatGPT Style */}
+        <div className="w-80 bg-gray-900 rounded-lg border border-gray-700 p-4 overflow-y-auto">
+          <div className="flex items-center gap-3 mb-6">
+            <button
+              onClick={handleNewChat}
+              className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-lg flex items-center justify-center transition-colors"
+            >
+              <MessageCircle className="w-5 h-5 text-gray-300" />
+            </button>
+            <span className="font-semibold text-gray-100">New chat</span>
           </div>
-        </SidebarProvider>
+          
+          <div className="space-y-2">
+            {conversations.length === 0 ? (
+              <p className="text-xs text-gray-500 text-center py-4">No conversations yet</p>
+            ) : (
+              conversations.map((conv) => (
+                <div
+                  key={conv.id}
+                  className={`group p-3 rounded-lg cursor-pointer transition-all ${
+                    conversationId === conv.id 
+                      ? 'bg-gray-800 border border-gray-600' 
+                      : 'hover:bg-gray-800'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span 
+                      onClick={() => loadConversation(conv.id)}
+                      className="flex-1 text-sm text-gray-200 truncate"
+                    >
+                      {conv.title}
+                    </span>
+                    <button
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        await supabase.from('conversations').delete().eq('id', conv.id);
+                        if (conversationId === conv.id) {
+                          handleNewChat();
+                        }
+                        loadConversationsList();
+                      }}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-700 rounded"
+                    >
+                      <Trash2 className="w-3 h-3 text-gray-400" />
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
 
-        {/* Main Chat Area */}
-        <div className="flex-1 flex flex-col bg-white rounded-xl border border-gray-200 overflow-hidden">
+        {/* Right Chat Area - Gemini Style */}
+        <div className="flex-1 bg-white rounded-lg border border-gray-200 flex flex-col">
+          {/* Header */}
+          <div className="border-b border-gray-200 p-4 bg-gray-50">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                <Bot className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <h2 className="font-semibold text-gray-900">Health Assistant</h2>
+                <p className="text-xs text-gray-500">AI-powered medical guidance</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Messages */}
           <div ref={scrollRef} className="flex-1 overflow-y-auto p-4">
             {showWelcome ? (
-              <div className="flex flex-col items-center justify-center h-full p-8 text-center max-w-lg mx-auto">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-green-100 mb-6">
-                  <Heart className="h-8 w-8 text-green-600" />
+              <div className="text-center py-16">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Sparkles className="w-8 h-8 text-white" />
                 </div>
-                <h1 className="text-2xl font-bold mb-3 text-gray-900">{t(language, 'welcome')}</h1>
-                <p className="text-gray-500 text-sm leading-relaxed mb-2">
+                <h1 className="text-2xl font-bold text-gray-900 mb-4">
+                  {t(language, 'welcome')}
+                </h1>
+                <p className="text-gray-600 mb-8 max-w-md mx-auto">
                   {profile?.full_name ? `Hello ${profile.full_name.split(' ')[0]}! ` : ''}
                   {t(language, 'welcomeDesc')}
                 </p>
-                {profile && (
-                  <p className="text-xs text-green-600 bg-green-50 px-3 py-2 rounded-lg mb-4">
-                    Your personalized AI health companion knows your profile and will provide tailored guidance.
-                  </p>
-                )}
-                <div className="flex flex-wrap gap-2 mt-4 justify-center">
+                <div className="flex flex-wrap gap-3 justify-center">
                   {suggestions.map((s) => (
-                    <Button key={s} variant="outline" size="sm" onClick={() => handleSuggestion(s)} className="text-xs">
+                    <button
+                      key={s}
+                      onClick={() => handleSuggestion(s)}
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors"
+                    >
                       {s}
-                    </Button>
+                    </button>
                   ))}
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {messages.map((msg, i) => (
-                  <ChatMessage key={i} role={msg.role} content={msg.content} />
-                ))}
-                {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
-                  <div className="flex gap-3 py-4">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
-                      <Heart className="h-4 w-4 text-green-600" />
+                  <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`flex gap-3 max-w-[80%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                        msg.role === 'user' 
+                          ? 'bg-blue-500' 
+                          : 'bg-gradient-to-br from-blue-500 to-purple-600'
+                      }`}>
+                        {msg.role === 'user' ? (
+                          <User className="w-4 h-4 text-white" />
+                        ) : (
+                          <Bot className="w-4 h-4 text-white" />
+                        )}
+                      </div>
+                      <div className={`px-4 py-3 rounded-2xl ${
+                        msg.role === 'user'
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-100 text-gray-900'
+                      }`}>
+                        <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                          {msg.content}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      {t(language, 'loading')}
+                  </div>
+                ))}
+                {isLoading && (
+                  <div className="flex justify-start">
+                    <div className="flex gap-3 max-w-[80%]">
+                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <Bot className="w-4 h-4 text-white" />
+                      </div>
+                      <div className="px-4 py-3 rounded-2xl bg-gray-100">
+                        <div className="flex gap-1">
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -220,32 +319,26 @@ export default function Chat() {
 
           {/* Input Area */}
           <div className="border-t border-gray-200 p-4 bg-gray-50">
-            {!showWelcome && messages.length > 0 && messages[messages.length - 1]?.role === 'assistant' && !isLoading && (
-              <div className="flex flex-wrap gap-2 mb-3">
-                {suggestions.map((s) => (
-                  <Button key={s} variant="outline" size="sm" onClick={() => handleSuggestion(s)} className="text-xs">
-                    {s}
-                  </Button>
-                ))}
-              </div>
-            )}
-            <div className="flex gap-2">
-              <Textarea
+            <div className="flex gap-3">
+              <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={t(language, 'typeMessage')}
-                className="min-h-[44px] max-h-[120px] resize-none flex-1 bg-white border-gray-300"
-                rows={1}
+                placeholder="Type your message..."
+                className="flex-1 resize-none rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                rows={3}
               />
-              <Button
+              <button
                 onClick={handleSend}
                 disabled={!input.trim() || isLoading}
-                size="icon"
-                className="shrink-0 h-[44px] w-[44px] bg-green-600 hover:bg-green-700"
+                className="self-end px-4 py-3 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white rounded-lg transition-colors flex items-center gap-2"
               >
-                <Send className="h-4 w-4" />
-              </Button>
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Send className="w-4 h-4" />
+                )}
+              </button>
             </div>
           </div>
         </div>

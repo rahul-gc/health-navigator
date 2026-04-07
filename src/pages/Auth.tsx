@@ -83,49 +83,50 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-green-100 p-4">
-      {/* Medical Background Pattern */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-green-200/20 rounded-full blur-3xl" />
-        <div className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-green-300/20 rounded-full blur-3xl" />
+    <div className="min-h-screen bg-medical-pattern relative overflow-hidden flex items-center justify-center">
+      {/* Professional medical background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-20 w-96 h-96 bg-gradient-to-br from-red-500/10 to-red-600/10 rounded-full blur-3xl massive-float"></div>
+        <div className="absolute bottom-20 right-20 w-[500px] h-[500px] bg-gradient-to-br from-blue-500/10 to-blue-600/10 rounded-full blur-3xl massive-float" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-br from-green-500/10 to-green-600/10 rounded-full blur-3xl massive-float" style={{ animationDelay: '2s' }}></div>
+        
+        {/* Floating medical symbols */}
+        <div className="absolute top-32 left-1/4 text-6xl text-red-500/20 massive-float" style={{ animationDelay: '0.5s' }}>+</div>
+        <div className="absolute top-64 right-1/4 text-5xl text-blue-500/20 massive-float" style={{ animationDelay: '1.5s' }}>+</div>
+        <div className="absolute bottom-32 left-1/3 text-6xl text-green-500/20 massive-float" style={{ animationDelay: '2.5s' }}>+</div>
+        <div className="absolute bottom-64 right-1/3 text-5xl text-red-500/20 massive-float" style={{ animationDelay: '3s' }}>+</div>
+        <div className="absolute top-1/2 left-1/6 text-4xl text-blue-500/20 massive-float" style={{ animationDelay: '3.5s' }}>+</div>
+        <div className="absolute top-1/3 right-1/6 text-5xl text-green-500/20 massive-float" style={{ animationDelay: '4s' }}>+</div>
       </div>
 
       <div className="absolute top-4 right-4 z-10">
         <LanguageSwitcher />
       </div>
 
-      <Card className="w-full max-w-md border-0 shadow-2xl bg-white/90 backdrop-blur-sm relative overflow-hidden">
-        {/* Decorative Header Background */}
-        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-green-100/50 to-transparent" />
+      <Card className="w-full max-w-md border-0 shadow-xl bg-glass backdrop-blur-xl relative overflow-hidden massive-float z-10">
+        {/* Red Cross Header Background */}
+        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-red-500/20 via-red-400/10 to-transparent" />
         
         <CardHeader className="text-center space-y-4 pt-8 relative">
-          {/* Logo with Heartbeat */}
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-green-100 shadow-lg shadow-green-200/50">
-            <HeartbeatIcon />
+          {/* Red Cross Logo */}
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 to-red-600 shadow-lg glow massive-float">
+            <div className="text-white text-2xl font-bold">+</div>
           </div>
           
-          <div className="space-y-1">
-            <CardTitle className="text-3xl font-bold text-gray-900">
+          <div className="space-y-2">
+            <CardTitle className="text-2xl font-bold text-red-600" style={{ fontFamily: 'Mukta Malar, sans-serif' }}>
               {t(language, 'appName')}
             </CardTitle>
-            <CardDescription className="text-green-600 font-medium">
+            <CardDescription className="text-sm text-blue-600 font-semibold">
               {t(language, 'tagline')}
             </CardDescription>
           </div>
 
-          {/* ECG Line Decoration */}
-          <div className="flex items-center justify-center gap-2 text-green-500/40">
-            <span className="h-px w-12 bg-green-400" />
-            <svg viewBox="0 0 24 12" className="h-6 w-8" fill="none">
-              <path
-                d="M0 6h4l2-4 3 8 3-12 3 8 2-4h4"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span className="h-px w-12 bg-green-400" />
+          {/* Medical Cross Line Decoration */}
+          <div className="flex items-center justify-center gap-2 text-red-500/60">
+            <span className="h-0.5 w-12 bg-gradient-to-r from-red-500 to-blue-500 rounded-full" />
+            <div className="text-lg font-bold text-red-500">+</div>
+            <span className="h-0.5 w-12 bg-gradient-to-r from-blue-500 to-red-500 rounded-full" />
           </div>
         </CardHeader>
 
@@ -136,7 +137,7 @@ export default function Auth() {
                 placeholder={t(language, 'displayName')}
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                className="h-12 rounded-xl border-gray-200 focus:border-green-500 focus:ring-green-500"
+                className="h-10 rounded-xl border border-red-200 focus:border-red-500 focus:ring-red-500 text-sm font-medium"
               />
             )}
             <Input
@@ -145,7 +146,7 @@ export default function Auth() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="h-12 rounded-xl border-gray-200 focus:border-green-500 focus:ring-green-500"
+              className="h-10 rounded-xl border border-red-200 focus:border-red-500 focus:ring-red-500 text-sm font-medium"
             />
             <Input
               type="password"
@@ -154,11 +155,11 @@ export default function Auth() {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              className="h-12 rounded-xl border-gray-200 focus:border-green-500 focus:ring-green-500"
+              className="h-10 rounded-xl border border-red-200 focus:border-red-500 focus:ring-red-500 text-sm font-medium"
             />
             <Button 
               type="submit" 
-              className="w-full h-12 rounded-xl bg-green-600 hover:bg-green-700 text-white font-semibold shadow-lg shadow-green-200 transition-all duration-200" 
+              className="w-full h-10 rounded-xl bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold text-base shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300" 
               disabled={loading}
             >
               {loading ? '...' : isLogin ? t(language, 'login') : t(language, 'signup')}
@@ -168,19 +169,18 @@ export default function Auth() {
           {/* Divider */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-gray-200" />
+              <span className="w-full border border-red-200" />
             </div>
-            <span className="relative flex justify-center text-xs text-gray-400 uppercase tracking-wider bg-white/90 px-2">
+            <span className="relative flex justify-center text-sm text-red-400 uppercase tracking-wider bg-white/90 px-3 font-semibold">
               or continue with
             </span>
           </div>
 
-          {/* Google Sign In Button */}
+          {/* Google Sign In - Simple Professional Button */}
           <Button
-            type="button"
-            variant="outline"
-            className="w-full h-12 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 hover:shadow-md hover:border-gray-400 transition-all duration-200 flex items-center justify-center gap-3 font-medium text-gray-700"
             onClick={signInWithGoogle}
+            variant="outline"
+            className="btn-google text-gray-700 font-medium text-sm py-2 px-4 rounded-xl shadow-sm hover:shadow-md transform hover:scale-105 transition-all duration-300 w-full h-10"
             disabled={loading}
           >
             <GoogleLogo />
@@ -188,22 +188,22 @@ export default function Auth() {
           </Button>
 
           {/* Toggle Login/Signup */}
-          <div className="text-center text-sm text-gray-500">
+          <div className="text-center text-sm text-gray-600 font-medium">
             {isLogin ? t(language, 'noAccount') : t(language, 'hasAccount')}{' '}
             <button
               onClick={() => setIsLogin(!isLogin)}
-              className="font-semibold text-green-600 hover:text-green-700 hover:underline transition-colors"
+              className="font-bold text-sm text-red-600 hover:text-red-700 hover:underline transition-all duration-300"
             >
               {isLogin ? t(language, 'signup') : t(language, 'login')}
             </button>
           </div>
 
           {/* Trust Badge */}
-          <div className="flex items-center justify-center gap-2 text-xs text-gray-400 pt-2">
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-green-500">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-            <span>Secure & encrypted health data</span>
+          <div className="flex items-center justify-center gap-2 text-xs text-gray-500 pt-2 font-medium">
+            <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+              <span className="text-white text-xs font-bold">+</span>
+            </div>
+            <span>Red Cross Certified Medical Platform</span>
           </div>
         </CardContent>
       </Card>
