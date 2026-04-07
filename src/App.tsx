@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, NavLink } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +8,9 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import Auth from "@/pages/Auth";
 import Dashboard from "@/components/Dashboard";
 import Chat from "@/pages/Chat";
+import Vitals from "@/pages/Vitals";
+import Profile from "@/pages/Profile";
+import Settings from "@/pages/Settings";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -81,6 +84,38 @@ const AppRoutes = () => (
       element={
         <ProtectedRoute>
           <Chat />
+        </ProtectedRoute>
+      } 
+    />
+    <Route 
+      path="/vital" 
+      element={
+        <ProtectedRoute>
+          <Navigate to="/vitals" replace />
+        </ProtectedRoute>
+      } 
+    />
+    <Route 
+      path="/vitals" 
+      element={
+        <ProtectedRoute>
+          <Vitals />
+        </ProtectedRoute>
+      } 
+    />
+    <Route 
+      path="/profile" 
+      element={
+        <ProtectedRoute>
+          <Profile />
+        </ProtectedRoute>
+      } 
+    />
+    <Route 
+      path="/settings" 
+      element={
+        <ProtectedRoute>
+          <Settings />
         </ProtectedRoute>
       } 
     />

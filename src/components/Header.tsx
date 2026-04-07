@@ -16,9 +16,10 @@ interface HeaderProps {
     full_name: string;
     avatar_url?: string;
   };
+  title?: string;
 }
 
-export default function Header({ profile }: HeaderProps) {
+export default function Header({ profile, title = 'Dashboard' }: HeaderProps) {
   const { toast } = useToast();
 
   const handleLogout = async () => {
@@ -32,7 +33,7 @@ export default function Header({ profile }: HeaderProps) {
 
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-      <div>
+      <div>{title}
         <h2 className="text-lg font-semibold text-gray-900">Dashboard</h2>
       </div>
 
